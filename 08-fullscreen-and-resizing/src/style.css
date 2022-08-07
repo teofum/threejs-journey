@@ -1,0 +1,11 @@
+:root,
+body {
+  margin: 0;
+  overflow: hidden;
+}
+
+canvas.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
