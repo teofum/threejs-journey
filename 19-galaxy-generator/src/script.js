@@ -27,15 +27,15 @@ const particleTexture = textureLoader.load('/textures/particles/1.png');
 // Parameters
 const parameters = {
   count: 100000,
-  size: 0.01,
+  size: 0.02,
   radius: 5,
   arms: 5,
   spin: 1,
   decay: 1.5,
   fuzzy: 1.2,
   tilt: -15,
-  centerColor: '#aa5511',
-  edgeColor: '#221155',
+  centerColor: '#f07123',
+  edgeColor: '#011892',
 };
 
 gui.add(parameters, 'count')
