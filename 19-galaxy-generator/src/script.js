@@ -127,13 +127,6 @@ const generateGalaxy = () => {
     const fuzziness = parameters.fuzzy
       * ((parameters.radius - radius * 0.25) / parameters.radius);
 
-    const exp = 2.4;
-    const spread = () => {
-      const n = Math.random() ** exp;
-      const sign = Math.sign(Math.random() - 0.5);
-      return n * 0.5 * sign;
-    };
-
     let rx = (Math.random() - 0.5);
     let ry = (Math.random() - 0.5);
     let rz = (Math.random() - 0.5);
