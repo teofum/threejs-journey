@@ -372,12 +372,12 @@ debugObject.resetWall();
 /**
  * Lights
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.2);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7);
 directionalLight.castShadow = true;
-directionalLight.shadow.mapSize.set(1024, 1024);
+directionalLight.shadow.mapSize.set(2048, 2048);
 directionalLight.shadow.camera.far = 30;
 directionalLight.shadow.camera.left = -15;
 directionalLight.shadow.camera.top = 15;
@@ -417,6 +417,9 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.7;
 
 window.addEventListener('resize', () => {
   // Update sizes
