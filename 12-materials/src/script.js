@@ -1,3 +1,4 @@
+/* eslint-disable no-return-assign */
 import './style.css';
 import * as Three from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -56,10 +57,19 @@ const material = new Three.MeshStandardMaterial({
   roughness: 0.15,
   metalness: 1,
   envMap: texEnvironmentMap,
+  color: new Three.Color('#a9a9a9'),
+  emissive: new Three.Color('#ff0000'),
+  emissiveIntensity: 0,
 });
 gui.addColor(material, 'color');
 gui.add(material, 'roughness').min(0).max(1);
 gui.add(material, 'metalness').min(0).max(1);
+gui.add(material, 'emissiveIntensity').min(0).max(2)
+  .onChange((v) => {
+    material.emissive.r = v * 2;
+    material.emissive.g = v * 0.5;
+    material.emissive.b = v * 0.25;
+  });
 
 const doorMaterial = new Three.MeshStandardMaterial({
   map: texDoorColor,
