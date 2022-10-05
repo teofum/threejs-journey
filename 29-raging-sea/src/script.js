@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -10,6 +11,10 @@ import waterFragmentShader from './shaders/water/fragment.glsl';
  */
 // Debug
 const gui = new dat.GUI({ width: 340 });
+window.addEventListener('keypress', (ev) => {
+  // eslint-disable-next-line no-underscore-dangle
+  if (ev.key === 'd') gui._hidden ? gui.show() : gui.hide();
+});
 const parameters = {
   fogColor: new THREE.Color('#9bd8ff'),
 };
@@ -135,6 +140,7 @@ controls.enableDamping = true;
  */
 const renderer = new THREE.WebGLRenderer({
   canvas,
+  antialias: true,
 });
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
