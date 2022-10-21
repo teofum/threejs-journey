@@ -10,10 +10,15 @@ import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { RGBShiftShader } from 'three/examples/jsm/shaders/RGBShiftShader';
 import { GammaCorrectionShader } from 'three/examples/jsm/shaders/GammaCorrectionShader';
 import * as dat from 'lil-gui';
+import Stats from 'stats.js';
 import passVertexShader from './shaders/common/pass.vertex.glsl';
 import tintFragmentShader from './shaders/tint/fragment.glsl';
 import displacementFragmentShader from './shaders/displacement/fragment.glsl';
 import ditherFragmentShader from './shaders/dither/fragment.glsl';
+
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
 const renderScale = 3;
 
@@ -276,6 +281,8 @@ window.addEventListener('resize', () => {
 const clock = new THREE.Clock();
 
 const tick = () => {
+  stats.begin();
+
   const elapsedTime = clock.getElapsedTime();
 
   // Update controls
@@ -286,6 +293,8 @@ const tick = () => {
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
+
+  stats.end();
 };
 
 tick();
