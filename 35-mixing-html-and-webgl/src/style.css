@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}
+
+.loading-bar {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  height: 2px;
+  background: #ffffff;
+  transform: scaleX(0.3);
+  transform-origin: top left;
+  transition: transform 0.5s;
+
+  z-index: 10;
+}
+
+.loading-bar.ended {
+  transform: scaleX(0);
+  transform-origin: 100% 0;
+  transition: transform 1.5s ease-in-out;
+}
+
+.point {
+  --size: 2.5rem;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-family: sans-serif;
+}
+
+.point .label {
+  position: absolute;
+  top: calc(var(--size) / -2);
+  left: calc(var(--size) / -2);
+  width: var(--size);
+  height: var(--size);
+
+  background-color: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  border-radius: 50%;
+
+  text-align: center;
+  line-height: var(--size);
+  font-size: 0.875rem;
+
+  cursor: help;
+
+  transform: scale(0);
+  transition: transform 300ms ease;
+}
+
+.point.visible .label {
+  transform: scale(1);
+}
+
+.point .text {
+  box-sizing: border-box;
+
+  position: absolute;
+  top: calc(var(--size) * 0.75);
+  left: calc(var(--size) * -2.5);
+  width: calc(var(--size) * 5);
+
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border-radius: 4px;
+
+  font-size: 0.875rem;
+  line-height: 1.3;
+  text-align: center;
+
+  opacity: 0;
+  transition: opacity 300ms ease;
+
+  pointer-events: none;
+}
+
+.point:hover .text {
+  opacity: 1;
+}
