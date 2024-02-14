@@ -2,13 +2,18 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as dat from 'lil-gui';
+import Stats from 'stats.js';
 import testVertexShader from './shaders/test/vertex.glsl';
 import testFragmentShader from './shaders/test/fragment.glsl';
+
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 
 /**
  * Base
  */
-const renderScale = 4;
+const renderScale = 1;
 
 // Debug
 const gui = new dat.GUI();
@@ -25,7 +30,7 @@ rtScene.background = new THREE.Color('#0099ff');
 
 // Loaders
 const textureLoader = new THREE.TextureLoader();
-const lookupTexture = textureLoader.load('/index_lut_16.png');
+const lookupTexture = textureLoader.load('/lut_apple2_005.png');
 lookupTexture.generateMipmaps = false;
 lookupTexture.magFilter = THREE.NearestFilter;
 lookupTexture.minFilter = THREE.NearestFilter;
@@ -173,52 +178,6 @@ for (let i = 0; i < paletteSize; i++) {
 const paletteTexture = new THREE.DataTexture(paletteData, paletteSize, 1);
 paletteTexture.needsUpdate = true;
 
-// Giant lookup texture generator
-// const distance = (c1, c2) => (
-//   (c1[0] - c2[0]) ** 2
-//   + (c1[1] - c2[1]) ** 2
-//   + (c1[2] - c2[2]) ** 2
-// );
-
-// const closest = (color, pal) => {
-//   let cc = [0, 0, 0];
-//   let ci = 0;
-//   let dMin = Number.MAX_VALUE;
-
-//   for (let i = 0; i < pal.length / 3; i++) {
-//     const pc = pal.slice(i * 3, i * 3 + 3);
-//     const d = distance(color, pc);
-//     if (d < dMin) {
-//       cc = pc;
-//       ci = i;
-//       dMin = d;
-//     }
-//   }
-
-//   return {
-//     color: cc,
-//     index: ci,
-//   };
-// };
-
-// const index = (r, g, b) => r * 65536 + g * 256 + b;
-// const lookupData = new Uint8Array(256 * 256 * 256 * 4);
-// for (let r = 0; r < 256; r++) {
-//   for (let g = 0; g < 256; g++) {
-//     for (let b = 0; b < 256; b++) {
-//       const i4 = index(r, g, b) * 4;
-//       // const [pr, pg, pb] = closest([r, g, b], palette).color;
-//       const i = closest([r, g, b], palette).index;
-//       lookupData[i4 + 0] = i * (256 / paletteSize);
-//       lookupData[i4 + 1] = 0;
-//       lookupData[i4 + 2] = 0;
-//       lookupData[i4 + 3] = 255;
-//     }
-//   }
-// }
-// const lookupTexture = new THREE.DataTexture(lookupData, 4096, 4096);
-// lookupTexture.needsUpdate = true;
-
 // RT plane
 const rtMaterial = new THREE.ShaderMaterial({
   vertexShader: testVertexShader,
@@ -289,6 +248,7 @@ window.addEventListener('resize', () => {
 const clock = new THREE.Clock();
 
 const tick = () => {
+  stats.begin();
   const elapsedTime = clock.getElapsedTime();
 
   mesh.rotation.y = elapsedTime * 0.2;
@@ -305,6 +265,7 @@ const tick = () => {
 
   // Call tick again on the next frame
   window.requestAnimationFrame(tick);
+  stats.end();
 };
 
 tick();

@@ -20,7 +20,7 @@ const stats = new Stats();
 stats.showPanel(0);
 document.body.appendChild(stats.dom);
 
-const renderScale = 3;
+const renderScale = 1;
 
 /**
  * Base
@@ -40,6 +40,10 @@ const scene = new THREE.Scene();
 const gltfLoader = new GLTFLoader();
 const cubeTextureLoader = new THREE.CubeTextureLoader();
 const textureLoader = new THREE.TextureLoader();
+const lookupTexture = textureLoader.load('/lut_mac.png');
+lookupTexture.generateMipmaps = false;
+lookupTexture.magFilter = THREE.NearestFilter;
+lookupTexture.minFilter = THREE.NearestFilter;
 
 /**
  * Update all materials
@@ -175,49 +179,15 @@ for (let i = 0; i < data.length; i++) {
 const thresholds = new THREE.DataTexture(thresholdData, 8, 8);
 thresholds.needsUpdate = true;
 
-// Palette
-const luma = ([r, g, b]) => r * 0.299 + g * 0.587 + b * 0.114;
-const paletteSize = 16;
-const palette = [
-  [0x08, 0x00, 0x00],
-  [0x20, 0x1A, 0x0B],
-  [0x43, 0x28, 0x17],
-  [0x49, 0x29, 0x10],
-  [0x23, 0x43, 0x09],
-  [0x5D, 0x4F, 0x1E],
-  [0x9C, 0x6B, 0x20],
-  [0xA9, 0x22, 0x0F],
-  [0x2B, 0x34, 0x7C],
-  [0x2B, 0x74, 0x09],
-  [0xD0, 0xCA, 0x40],
-  [0xE8, 0xA0, 0x77],
-  [0x6A, 0x94, 0xAB],
-  [0xD5, 0xC4, 0xB3],
-  [0xFC, 0xE7, 0x6E],
-  [0xFC, 0xFA, 0xE2],
-].sort((a, b) => luma(a) - luma(b)).flat(1);
-const paletteData = new Uint8Array(paletteSize * 4);
-for (let i = 0; i < paletteSize; i++) {
-  const i3 = i * 3;
-  const i4 = i * 4;
-  paletteData[i4 + 0] = palette[i3 + 0];
-  paletteData[i4 + 1] = palette[i3 + 1];
-  paletteData[i4 + 2] = palette[i3 + 2];
-  paletteData[i4 + 3] = 255;
-}
-const paletteTexture = new THREE.DataTexture(paletteData, paletteSize, 1);
-paletteTexture.needsUpdate = true;
-
 const ditherShader = {
   vertexShader: passVertexShader,
   fragmentShader: ditherFragmentShader,
   uniforms: {
     tDiffuse: { value: null },
     uThresholdMap: { value: thresholds },
-    uPalette: { value: paletteTexture },
+    uLookup: { value: lookupTexture },
     uMapSize: { value: new THREE.Vector2(8, 8) },
     uResolution: { value: null },
-    uErrorCoeff: { value: 0.05 },
   },
 };
 
@@ -249,8 +219,6 @@ effectComposer.addPass(gammaPass);
 gui.add(bloomPass, 'strength').min(0).max(1).step(0.01);
 gui.add(bloomPass, 'threshold').min(0).max(1).step(0.01);
 gui.add(bloomPass, 'radius').min(0).max(1).step(0.01);
-gui.add(shaderPass.material.uniforms.uErrorCoeff, 'value')
-  .min(0).max(0.5).step(0.001);
 
 /**
  * Resize handler
